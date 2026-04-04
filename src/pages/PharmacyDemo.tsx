@@ -25,7 +25,7 @@ import { Link } from 'react-router-dom';
 const ORDERS = [
   { id: "ORD-7280", customer: "Sarah O.", items: "Insulin Pen", total: "₦12,000", status: "Processing", time: "15 mins ago", location: "GRA" },
   { id: "ORD-7279", customer: "Musa J.", items: "Cough Syrup", total: "₦2,800", status: "Delivered", time: "1 hour ago", location: "Basin" },
-  { id: "ORD-7278", customer: "Ibrahim L.", items: "First Aid Kit", total: "₦8,500", status: "Delivered", time: "3 hours ago", location: "Nigeria Central" },
+  { id: "ORD-7278", customer: "Ibrahim L.", items: "First Aid Kit", total: "₦8,500", status: "Delivered", time: "3 hours ago", location: "Ilorin Central" },
 ];
 
 export default function PharmacyDemo() {
@@ -81,7 +81,7 @@ export default function PharmacyDemo() {
             <img src="https://picsum.photos/seed/pharmacy-owner/100/100" alt="User" className="h-10 w-10 rounded-full" referrerPolicy="no-referrer" />
             <div className="overflow-hidden">
               <p className="truncate text-xs font-bold">Peace Standard Pharmacy</p>
-              <p className="truncate text-[10px] text-slate-400">Tanke, Nigeria</p>
+              <p className="truncate text-[10px] text-slate-400">Tanke, Ilorin</p>
             </div>
           </div>
         </div>

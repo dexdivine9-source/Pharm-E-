@@ -75,7 +75,7 @@ export default function Dashboard() {
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-3">Find & Buy</h2>
               <p className="text-slate-500 leading-relaxed mb-8">
-                Search across all verified pharmacies in Nigeria and purchase securely online.
+                Search across all verified pharmacies in Ilorin and purchase securely online.
               </p>
               <div className="mt-auto flex items-center font-bold text-emerald-600 group-hover:translate-x-2 transition-transform">
                 Start Searching <ChevronRight size={20} />

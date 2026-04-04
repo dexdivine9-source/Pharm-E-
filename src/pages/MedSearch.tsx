@@ -25,7 +25,7 @@ const PHARMACIES = [
   {
     id: 1,
     name: "Peace Standard Pharmacy",
-    location: "Tanke, Nigeria",
+    location: "Tanke, Ilorin",
     distance: "0.8 km",
     price: "₦4,000",
     stock: "In Stock",
@@ -35,7 +35,7 @@ const PHARMACIES = [
   {
     id: 2,
     name: "Medsoft Pharmacy",
-    location: "GRA, Nigeria",
+    location: "GRA, Ilorin",
     distance: "2.4 km",
     price: "₦4,200",
     stock: "In Stock",
@@ -45,7 +45,7 @@ const PHARMACIES = [
   {
     id: 3,
     name: "Basin Central Pharmacy",
-    location: "Basin, Nigeria",
+    location: "Basin, Ilorin",
     distance: "4.1 km",
     price: "₦3,850",
     stock: "Limited Stock",
@@ -112,7 +112,7 @@ export default function MedSearch() {
             GoPharma: Find Your Medicine <span className="text-emerald-600">in Seconds.</span>
           </motion.h1>
           <p className="mt-6 text-lg text-slate-600">
-            Search across verified pharmacies in Nigeria. Real-time stock, prices, and fast delivery.
+            Search across verified pharmacies in Ilorin. Real-time stock, prices, and fast delivery.
           </p>
 
           {/* Search Bar */}
@@ -172,7 +172,7 @@ export default function MedSearch() {
                   <Activity size={32} className="animate-pulse" />
                 </div>
               </div>
-              <h3 className="mt-8 text-xl font-bold text-slate-900">Scanning Nigeria Pharmacies...</h3>
+              <h3 className="mt-8 text-xl font-bold text-slate-900">Scanning Ilorin Pharmacies...</h3>
               <p className="mt-2 text-slate-500">Checking real-time stock and prices</p>
             </motion.div>
           ) : showResults ? (
@@ -243,7 +243,7 @@ export default function MedSearch() {
                 <Search size={40} />
               </div>
               <h3 className="text-xl font-bold text-slate-900">Start your search</h3>
-              <p className="mt-2 text-slate-500">Enter a medication name to find nearby pharmacies in Nigeria.</p>
+              <p className="mt-2 text-slate-500">Enter a medication name to find nearby pharmacies in Ilorin.</p>
             </div>
           )}
         </AnimatePresence>
@@ -254,7 +254,7 @@ export default function MedSearch() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">The GoPharma Advantage</h2>
-            <p className="mt-4 text-lg text-slate-400">A seamless, tech-driven approach to healthcare in Nigeria.</p>
+            <p className="mt-4 text-lg text-slate-400">A seamless, tech-driven approach to healthcare in Ilorin.</p>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-3">
@@ -262,7 +262,7 @@ export default function MedSearch() {
               {
                 title: "Search & Buy",
                 icon: <Search className="text-emerald-500" size={32} />,
-                desc: "Find your specific medicine across Nigeria in seconds. Complete your purchase immediately via our secure web portal or through the WhatsApp AI assistant."
+                desc: "Find your specific medicine across Ilorin in seconds. Complete your purchase immediately via our secure web portal or through the WhatsApp AI assistant."
               },
               {
                 title: "QR Instant-Pickup",
@@ -305,7 +305,7 @@ export default function MedSearch() {
           <div className="grid gap-8 md:grid-cols-3">
             {[
               { title: "Verified Stock", desc: "Real-time inventory updates from PCN-licensed pharmacies.", icon: <ShieldCheck className="text-emerald-600" /> },
-              { title: "Price Comparison", desc: "Find the best prices across Nigeria without leaving home.", icon: <Activity className="text-emerald-600" /> },
+              { title: "Price Comparison", desc: "Find the best prices across Ilorin without leaving home.", icon: <Activity className="text-emerald-600" /> },
               { title: "Fast Delivery", desc: "Average delivery time of 15 minutes to your doorstep.", icon: <Clock className="text-emerald-600" /> }
             ].map((item, idx) => (
               <div key={idx} className="flex gap-4">

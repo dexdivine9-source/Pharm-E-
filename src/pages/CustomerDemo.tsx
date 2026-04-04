@@ -14,7 +14,7 @@ const INITIAL_MESSAGES = [
   },
   { 
     id: 2, 
-    text: "I've analyzed your voice note. You're looking for 'Artemether/Lumefantrine' (Malaria ACT). I've found 3 pharmacies in Nigeria with this in stock.", 
+    text: "I've analyzed your voice note. You're looking for 'Artemether/Lumefantrine' (Malaria ACT). I've found 3 pharmacies in Ilorin with this in stock.", 
     sender: "bot", 
     time: "10:01 AM" 
   },
