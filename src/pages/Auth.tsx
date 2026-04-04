@@ -37,7 +37,7 @@ export default function Auth() {
           Secure & Verified Access
         </h1>
         <p className="text-slate-500 mb-10">
-          Join GoPharma to access verified medicine across Ilorin.
+          Join GoPharma to access verified medicine across Nigeria.
         </p>
 
         <div className="space-y-4">

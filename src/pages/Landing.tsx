@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 const FAQS = [
   {
     question: "What is GoPharma?",
-    answer: "We are Ilorin’s first AI-powered pharmacy network that connects you directly to verified local pharmacies and manufacturers to ensure you get authentic medicine in minutes."
+    answer: "We are Nigeria’s first AI-powered pharmacy network that connects you directly to verified local pharmacies and manufacturers to ensure you get authentic medicine in minutes."
   },
   {
     question: "How does the \"Find in Seconds\" search work?",
@@ -20,11 +20,11 @@ const FAQS = [
   },
   {
     question: "Is the 15-minute delivery guaranteed?",
-    answer: "For most areas in Ilorin Central, yes! GoPharma has a dedicated network of riders stationed at key hubs to ensure your medication reaches your doorstep faster than a pizza delivery."
+    answer: "For most areas in Nigeria Central, yes! GoPharma has a dedicated network of riders stationed at key hubs to ensure your medication reaches your doorstep faster than a pizza delivery."
   },
   {
     question: "How do I know the medicine is authentic?",
-    answer: "We only partner with PCN-licensed pharmacies and top Ilorin manufacturers. Every order comes with a GoPharma \"Verified\" seal to ensure it hasn't been tampered with."
+    answer: "We only partner with PCN-licensed pharmacies and top Nigeria manufacturers. Every order comes with a GoPharma \"Verified\" seal to ensure it hasn't been tampered with."
   },
   {
     question: "Do I need to create an account to order?",
@@ -82,10 +82,10 @@ export default function Landing() {
               transition={{ duration: 0.6 }}
             >
               <div className="mb-6 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                Now serving Ilorin, Kwara State
+                Now serving Nigeria
               </div>
               <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-                Order authentic medication from <span className="text-emerald-600">trusted pharmacies</span> in Ilorin.
+                Order authentic medication from <span className="text-emerald-600">trusted pharmacies</span> in Nigeria.
               </h1>
               <p className="mt-6 text-lg leading-8 text-slate-600">
                 The gateway to verified healthcare. Bridging the gap between manufacturers and your doorstep.
@@ -107,7 +107,7 @@ export default function Landing() {
                     <img key={i} className="h-8 w-8 rounded-full border-2 border-white" src={`https://picsum.photos/seed/user${i}/100/100`} alt="User" referrerPolicy="no-referrer" />
                   ))}
                 </div>
-                <span>Joined by 500+ residents in Ilorin</span>
+                <span>Joined by 500+ residents in Nigeria</span>
               </div>
             </motion.div>
             <motion.div 
@@ -117,7 +117,7 @@ export default function Landing() {
               className="relative hidden lg:block"
             >
               <div className="relative z-10 overflow-hidden rounded-3xl bg-slate-100 shadow-2xl">
-                <img src="https://picsum.photos/seed/pharma-ilorin/800/600" alt="Pharmacy App" className="w-full object-cover" referrerPolicy="no-referrer" />
+                <img src="https://picsum.photos/seed/pharma-nigeria/800/600" alt="Pharmacy App" className="w-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <div className="absolute -top-6 -right-6 h-32 w-32 rounded-full bg-emerald-100/50 blur-3xl"></div>
               <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-emerald-100/50 blur-3xl"></div>
@@ -130,7 +130,7 @@ export default function Landing() {
       <section className="bg-white py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">A Broken System That's Failing Ilorin</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">A Broken System That's Failing Nigeria</h2>
             <p className="mt-4 text-lg text-slate-600">Traditional medicine sourcing is slow, unreliable, and expensive.</p>
           </div>
           
@@ -173,13 +173,13 @@ export default function Landing() {
                 <MessageSquare size={16} />
               </div>
               <p className="text-lg font-medium leading-relaxed text-slate-800">
-                "Our platform allows all pharmacies to list products in real-time, creating a unified digital inventory for Ilorin. Patients can buy securely via our <span className="font-bold text-emerald-700">Website</span> or through our <span className="font-bold text-emerald-700">WhatsApp AI Assistant</span>, ensuring no one is left behind."
+                "Our platform allows all pharmacies to list products in real-time, creating a unified digital inventory for Nigeria. Patients can buy securely via our <span className="font-bold text-emerald-700">Website</span> or through our <span className="font-bold text-emerald-700">WhatsApp AI Assistant</span>, ensuring no one is left behind."
               </p>
               <div className="mt-6 flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold">GP</div>
                 <div>
                   <p className="text-sm font-bold text-slate-900">GoPharma Bridge</p>
-                  <p className="text-xs text-emerald-600 font-medium">Connecting Ilorin to Health</p>
+                  <p className="text-xs text-emerald-600 font-medium">Connecting Nigeria to Health</p>
                 </div>
               </div>
             </motion.div>
@@ -203,7 +203,7 @@ export default function Landing() {
                   id: 1,
                   title: "Search to Order",
                   icon: <Search size={24} />,
-                  desc: "Find your specific medicine across Ilorin in seconds. Complete your purchase immediately via our secure web portal or through the WhatsApp AI assistant."
+                  desc: "Find your specific medicine across Nigeria in seconds. Complete your purchase immediately via our secure web portal or through the WhatsApp AI assistant."
                 },
                 {
                   id: 2,
@@ -326,13 +326,13 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Verified Healthcare, Delivered</h2>
-            <p className="mt-4 text-lg text-slate-600">Built specifically for the Ilorin community.</p>
+            <p className="mt-4 text-lg text-slate-600">Built specifically for the Nigeria community.</p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
                 title: "Verified Sources",
-                desc: "Sourced directly from Ilorin manufacturers.",
+                desc: "Sourced directly from Nigeria manufacturers.",
                 icon: <ShieldCheck className="text-emerald-600" size={32} />,
                 link: "/demo/customer"
               },
@@ -367,12 +367,12 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-12 lg:flex-row">
             <div className="max-w-xl">
-              <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">Local coverage in Ilorin</h2>
+              <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">Local coverage in Nigeria</h2>
               <p className="mt-6 text-lg text-slate-600 leading-relaxed">
                 We've mapped out the city to ensure the fastest delivery times possible. From Tanke to Challenge, we've got you covered.
               </p>
               <div className="mt-10 grid grid-cols-2 gap-6">
-                {['Tanke', 'GRA', 'Basin', 'Ilorin Central', 'Adewole', 'Challenge'].map((loc) => (
+                {['Tanke', 'GRA', 'Basin', 'Nigeria Central', 'Adewole', 'Challenge'].map((loc) => (
                   <div key={loc} className="flex items-center gap-3 text-slate-700 group">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 transition-colors group-hover:bg-emerald-600 group-hover:text-white">
                       <MapPin size={16} />
@@ -420,7 +420,7 @@ export default function Landing() {
             className="mt-20 flex flex-col items-center justify-center rounded-[3rem] bg-slate-50 p-12 text-center border border-slate-100"
           >
             <h3 className="text-2xl font-bold text-slate-900">Ready for 15-minute delivery?</h3>
-            <p className="mt-2 text-slate-600 mb-8">Join thousands of Ilorin residents getting their meds faster than ever.</p>
+            <p className="mt-2 text-slate-600 mb-8">Join thousands of Nigeria residents getting their meds faster than ever.</p>
             <Link 
               to="/auth" 
               className="flex items-center gap-3 rounded-full bg-white px-8 py-4 text-lg font-bold text-slate-900 shadow-xl shadow-slate-200 transition-all hover:scale-105 active:scale-95 border border-slate-100"
@@ -531,8 +531,8 @@ export default function Landing() {
             <Activity className="text-emerald-600" size={24} />
             <span className="text-2xl font-black tracking-tighter text-slate-900 font-sans">GoPharma</span>
           </div>
-          <p className="text-slate-600 font-medium mb-2">GoPharma - Bridging the gap between manufacturers and your doorstep in Ilorin.</p>
-          <p className="text-slate-500 text-sm">© 2026 GoPharma Ilorin. All rights reserved.</p>
+          <p className="text-slate-600 font-medium mb-2">GoPharma - Bridging the gap between manufacturers and your doorstep in Nigeria.</p>
+          <p className="text-slate-500 text-sm">© 2026 GoPharma Nigeria. All rights reserved.</p>
         </div>
       </footer>
     </div>

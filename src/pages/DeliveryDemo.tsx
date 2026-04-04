@@ -246,7 +246,7 @@ export default function DeliveryDemo() {
                   <ShieldCheck className="text-emerald-600" size={24} />
                   <div>
                     <p className="text-xs font-bold text-emerald-800 uppercase">Tamper-Proof Seal Intact</p>
-                    <p className="text-[10px] text-emerald-600">Verified by GoPharma Ilorin</p>
+                    <p className="text-[10px] text-emerald-600">Verified by GoPharma Nigeria</p>
                   </div>
                 </div>
               </div>
