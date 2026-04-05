@@ -88,7 +88,7 @@ export default function Landing() {
                 Order authentic medication from <span className="text-emerald-600">trusted pharmacies</span> in Nigeria.
               </h1>
               <p className="mt-6 text-lg leading-8 text-slate-600">
-                The gateway to verified healthcare. Bridging the gap between manufacturers and your doorstep.
+                The gateway to verified healthcare. Find It, Verify It, Buy It. Authentic medicines from trusted pharmacies.
               </p>
               <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-4">
                 <Link to="/demo/customer" className="flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-emerald-700 hover:scale-105 hover:shadow-xl hover:shadow-emerald-200">
