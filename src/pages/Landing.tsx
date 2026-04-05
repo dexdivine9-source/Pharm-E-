@@ -82,7 +82,7 @@ export default function Landing() {
               transition={{ duration: 0.6 }}
             >
               <div className="mb-6 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                Now serving Nigeria
+                Now serving Ilorin
               </div>
               <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
                 Order authentic medication from <span className="text-emerald-600">trusted pharmacies</span> in Ilorin.
