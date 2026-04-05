@@ -73,56 +73,64 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-32 lg:pt-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center lg:text-left">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="mb-6 inline-flex items-center rounded-full bg-emerald-50 px-5 py-2 text-base font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                Now serving Ilorin
+      <section className="relative overflow-hidden py-32 bg-slate-50 font-sans flex flex-col items-center justify-center min-h-[80vh]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col items-center w-full"
+          >
+            <div className="mb-8 inline-flex items-center rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-600/30">
+              <span className="relative flex h-2.5 w-2.5 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              Now serving Ilorin
+            </div>
+
+            <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl md:text-7xl leading-[1.1] mb-6">
+              Order authentic medication from <span className="text-emerald-600">trusted pharmacies</span> in Nigeria.
+            </h1>
+
+            <p className="mt-4 text-lg md:text-xl tracking-[0.2em] text-slate-500 uppercase font-medium max-w-3xl mx-auto leading-relaxed">
+              The gateway to verified healthcare.
+              <br className="hidden sm:block" />
+              <span className="text-slate-700 font-bold ml-2 inline-block">
+                {"Find It, Verify It, Buy It.".split('').map((char, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.05, delay: 0.5 + index * 0.05 }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
+            </p>
+
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+              <Link to="/demo/customer" className="w-full sm:w-auto flex justify-center items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-emerald-700 hover:scale-105 shadow-md hover:shadow-xl">
+                Start Interactive Demo <ArrowRight size={20} />
+              </Link>
+              <Link to="/search" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-transparent hover:bg-white px-8 py-4 text-lg font-bold text-slate-600 transition-all hover:scale-105">
+                Med-Search
+              </Link>
+              <Link to="/demo/pharmacy" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-transparent hover:bg-white px-8 py-4 text-lg font-bold text-slate-600 transition-all hover:scale-105">
+                Pharmacy Portal
+              </Link>
+            </div>
+
+            <div className="mt-12 flex items-center justify-center gap-4 text-sm text-slate-500">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <img key={i} className="h-8 w-8 rounded-full border-2 border-slate-50 object-cover" src={`https://picsum.photos/seed/user${i}/100/100`} alt="User" referrerPolicy="no-referrer" />
+                ))}
               </div>
-              <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-                Order authentic medication from <span className="text-emerald-600">trusted pharmacies</span> in Nigeria.
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                The gateway to verified healthcare. Find It, Verify It, Buy It.
-              </p>
-              <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-4">
-                <Link to="/demo/customer" className="flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-emerald-700 hover:scale-105 hover:shadow-xl hover:shadow-emerald-200">
-                  Start Interactive Demo <ArrowRight size={20} />
-                </Link>
-                <Link to="/search" className="flex items-center gap-2 rounded-full border border-emerald-600 bg-white px-8 py-4 text-lg font-bold text-emerald-600 transition-all hover:bg-emerald-50 hover:scale-105">
-                  Med-Search
-                </Link>
-                <Link to="/demo/pharmacy" className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-lg font-bold text-slate-700 transition-all hover:bg-slate-50 hover:scale-105">
-                  Pharmacy Portal
-                </Link>
-              </div>
-              <div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-sm text-slate-500">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <img key={i} className="h-8 w-8 rounded-full border-2 border-white" src={`https://picsum.photos/seed/user${i}/100/100`} alt="User" referrerPolicy="no-referrer" />
-                  ))}
-                </div>
-                <span>Joined by 500+ residents in Ilorin</span>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative hidden lg:block"
-            >
-              <div className="relative z-10 overflow-hidden rounded-3xl bg-slate-100 shadow-2xl aspect-[4/3] flex items-center justify-center border-2 border-dashed border-slate-300">
-                <span className="text-slate-400 font-medium text-lg">Your Hero Image Here</span>
-              </div>
-              <div className="absolute -top-6 -right-6 h-32 w-32 rounded-full bg-emerald-100/50 blur-3xl"></div>
-              <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-emerald-100/50 blur-3xl"></div>
-            </motion.div>
-          </div>
+              <span>Joined by 500+ residents in Ilorin</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
