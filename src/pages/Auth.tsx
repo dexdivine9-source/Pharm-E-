@@ -65,6 +65,21 @@ export default function Auth() {
           </button>
         </div>
 
+        {/* Divider */}
+        <div className="mt-6 flex items-center gap-4">
+          <div className="flex-1 h-px bg-slate-100"></div>
+          <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">or</span>
+          <div className="flex-1 h-px bg-slate-100"></div>
+        </div>
+
+        {/* Manual Sign In */}
+        <button
+          onClick={() => handleLogin('Manual')}
+          className="mt-4 w-full flex items-center justify-center gap-3 h-14 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 text-slate-600 font-bold hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 transition-all active:scale-95"
+        >
+          Sign in manually
+        </button>
+
         <div className="mt-10 pt-8 border-t border-slate-50 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
           <ShieldCheck size={14} className="text-emerald-500" />
           End-to-End Verified Healthcare
