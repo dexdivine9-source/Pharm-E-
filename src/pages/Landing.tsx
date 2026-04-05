@@ -116,8 +116,8 @@ export default function Landing() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative hidden lg:block"
             >
-              <div className="relative z-10 overflow-hidden rounded-3xl bg-slate-100 shadow-2xl">
-                <img src="https://picsum.photos/seed/pharma-ilorin/800/600" alt="Pharmacy App" className="w-full object-cover" referrerPolicy="no-referrer" />
+              <div className="relative z-10 overflow-hidden rounded-3xl bg-slate-100 shadow-2xl aspect-[4/3] flex items-center justify-center border-2 border-dashed border-slate-300">
+                <span className="text-slate-400 font-medium text-lg">Your Hero Image Here</span>
               </div>
               <div className="absolute -top-6 -right-6 h-32 w-32 rounded-full bg-emerald-100/50 blur-3xl"></div>
               <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-emerald-100/50 blur-3xl"></div>
