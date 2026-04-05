@@ -16,7 +16,7 @@ const FAQS = [
   },
   {
     question: "How do I use the QR Code for Pre-orders?",
-    answer: "When you select \"Pre-order for Pickup,\" we alert the pharmacy to pack your meds immediately. You get a secure Pharma-E QR code on your dashboard or WhatsApp—just show it at the counter to collect your drugs without waiting in line."
+    answer: "When you select \"Pre-order for Pickup,\" we alert the pharmacy to pack your meds immediately. You get a secure Pharma-E QR code on your dashboard or WhatsApp, just show it at the counter to scan & collect your drugs without waiting in line."
   },
   {
     question: "Is the 15-minute delivery guaranteed?",
