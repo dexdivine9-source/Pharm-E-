@@ -139,7 +139,7 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">A Broken System That's Failing Ilorin</h2>
-            <p className="mt-4 text-lg text-slate-600">Traditional medicine sourcing is slow, unreliable, scarce and expensive.</p>
+            <p className="mt-4 text-lg text-slate-600">Sourcing traditional medicine is slow, unreliable, and expensive, with limited availability.</p>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
