@@ -9,7 +9,9 @@ import {
   Bell, 
   ChevronRight,
   Activity,
-  User
+  User,
+  MessageCircle,
+  Phone
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -49,6 +51,22 @@ export default function CustomerDashboard() {
       link: "#",
       linkText: "View Active Deliveries",
       bgColor: "bg-orange-50",
+    },
+    {
+      title: "Chat on WhatsApp",
+      description: "Instantly chat with our AI assistant to find drugs, get prices, or initiate an order.",
+      icon: <MessageCircle className="w-8 h-8 text-[#25D366]" />,
+      action: () => window.open("https://wa.me/yournumber", "_blank"),
+      actionText: "Chat Now",
+      bgColor: "bg-green-50",
+    },
+    {
+      title: "Talk with a Pharmacist",
+      description: "Get professional medical advice and drug consultations from certified pharmacists.",
+      icon: <Phone className="w-8 h-8 text-purple-600" />,
+      action: () => alert("Connecting you with a health professional..."),
+      actionText: "Call Pharmacist",
+      bgColor: "bg-purple-50",
     }
   ];
 
@@ -90,7 +108,7 @@ export default function CustomerDashboard() {
           <p className="mt-2 text-lg text-slate-500">What would you like to do today?</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {dashboardCards.map((card, idx) => (
             <motion.div
               key={idx}
