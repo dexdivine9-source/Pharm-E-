@@ -21,6 +21,7 @@ import AISearch from './pages/AISearch';
 import RiderTracking from './pages/RiderTracking';
 import ProtectedRoute, { PublicOnlyRoute } from './components/ProtectedRoute';
 import RoleModal from './components/onboarding/RoleModal';
+import ScannerPage from './pages/ScannerPage';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -48,6 +49,9 @@ function AnimatedRoutes() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/fulfillment" element={<Fulfillment />} />
         <Route path="/pickup" element={<Pickup />} />
+
+        {/* Scanner — accessible by both customers and pharmacy staff */}
+        <Route path="/scan" element={<ProtectedRoute><ScannerPage /></ProtectedRoute>} />
       </Routes>
     </AnimatePresence>
     <RoleModal />

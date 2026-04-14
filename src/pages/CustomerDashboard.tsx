@@ -11,7 +11,8 @@ import {
   Activity,
   User,
   MessageCircle,
-  Phone
+  Phone,
+  ShieldCheck
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -35,14 +36,12 @@ export default function CustomerDashboard() {
       bgColor: "bg-emerald-50",
     },
     {
-      title: "Scan to Collect",
-      description: "Use your unique QR code for instant, queue-free pickup at your chosen pharmacy.",
-      icon: <QrCode className="w-8 h-8 text-blue-600" />,
-      action: () => alert("QR Scanner coming soon!"),
-      actionText: "Open QR Scanner",
-      secondaryLink: "#",
-      secondaryText: "View My Codes",
-      bgColor: "bg-blue-50",
+      title: "Verify & Collect",
+      description: "Scan your pickup QR code or verify a drug's NAFDAC authenticity before accepting.",
+      icon: <ShieldCheck className="w-8 h-8 text-emerald-600" />,
+      link: "/scan",
+      linkText: "Open Scanner",
+      bgColor: "bg-emerald-50",
     },
     {
       title: "Track My Rider",
@@ -146,14 +145,6 @@ export default function CustomerDashboard() {
                   </Link>
                 ) : null}
 
-                {card.secondaryLink ? (
-                  <Link 
-                    to={card.secondaryLink}
-                    className="block w-full text-center py-4 px-6 bg-transparent border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-colors"
-                  >
-                    {card.secondaryText}
-                  </Link>
-                ) : null}
               </div>
             </motion.div>
           ))}

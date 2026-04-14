@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useSupabase } from '../lib/mock-db';
-import { LogOut, Plus, Search, Package, Edit2, Trash2, ChevronLeft, ChevronRight, ClipboardList, CheckCircle2, XCircle, Clock, AlertTriangle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { LogOut, Plus, Search, Package, Edit2, Trash2, ChevronLeft, ChevronRight, ClipboardList, CheckCircle2, XCircle, Clock, AlertTriangle, ScanLine } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function PharmacyPortal() {
   const { 
@@ -81,10 +81,18 @@ export default function PharmacyPortal() {
             <Package className="h-8 w-8 text-emerald-100" />
             <h1 className="text-2xl font-bold text-white">Pharmacy Portal</h1>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <span className="text-sm text-emerald-100 hidden sm:inline-block">
               Verified Pharmacy: {currentUser?.full_name}
             </span>
+            <Link
+              to="/scan"
+              id="portal-scan-btn"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-white text-sm font-bold rounded-lg transition-colors"
+            >
+              <ScanLine className="h-4 w-4" />
+              Scan Products
+            </Link>
             <button onClick={handleLogout} className="text-emerald-100 hover:text-white transition-colors">
               <LogOut className="h-5 w-5" />
             </button>
