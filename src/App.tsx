@@ -22,6 +22,7 @@ import RiderTracking from './pages/RiderTracking';
 import ProtectedRoute, { PublicOnlyRoute } from './components/ProtectedRoute';
 import RoleModal from './components/onboarding/RoleModal';
 import ScannerPage from './pages/ScannerPage';
+import AuthCallback from './pages/AuthCallback';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function AnimatedRoutes() {
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         
         {/* Customer Routes */}
         <Route path="/search" element={<ProtectedRoute requireRole="customer"><MedSearch /></ProtectedRoute>} />
