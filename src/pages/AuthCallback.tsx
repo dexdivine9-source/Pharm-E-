@@ -1,27 +1,51 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useSupabase } from '../lib/mock-db'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
+  const { login } = useSupabase()
 
   useEffect(() => {
-    // Supabase will automatically capture the session token from the window URL
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth event:', event);
-      if (event === 'SIGNED_IN') {
-        // Redirect to dashboard
-        navigate('/dashboard')
-      }
-      if (event === 'SIGNED_OUT') {
+    const handleAuthCallback = async () => {
+      try {
+        // Supabase automatically picks up the token from the URL hash
+        const { data: { session }, error } = await supabase.auth.getSession()
+
+        if (error) {
+          console.error('Auth callback error:', error.message)
+          navigate('/login')
+          return
+        }
+
+        if (session?.user) {
+          const user = session.user
+          const email = user.email || ''
+          const fullName =
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            email.split('@')[0] ||
+            'User'
+
+          // Bridge the real Supabase session into the mock auth system
+          // so that ProtectedRoute recognizes the user as logged in
+          login(email, fullName)
+
+          // Navigate to the landing page (which triggers role selection)
+          navigate('/')
+        } else {
+          console.error('No session found after OAuth callback')
+          navigate('/login')
+        }
+      } catch (err) {
+        console.error('Unexpected error in auth callback:', err)
         navigate('/login')
       }
-    })
-
-    return () => {
-      subscription.unsubscribe()
     }
-  }, [navigate])
+
+    handleAuthCallback()
+  }, [navigate, login])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
