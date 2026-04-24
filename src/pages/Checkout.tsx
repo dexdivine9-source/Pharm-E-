@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSupabase } from '../lib/mock-db';
-// Removed: window.MonnifySDK since we now handle it backend-side
+import PaymentPanel from '../components/payment/PaymentPanel';
 
 type PaymentMethod = 'pay_now' | 'pod' | null;
 
@@ -29,49 +29,39 @@ export default function Checkout() {
     medicineName?: string;
     distance?: string;
     location?: string;
+    orderId?: string;
+    totalPrice?: number;
   } | null;
 
   const pharmacyName = state?.pharmacyName ?? 'Fiolu Pharmacy Ltd';
   const medicineName = state?.medicineName ?? 'Insulin (Mixtard 30/70)';
   const pharmacyLocation = state?.location ?? 'GRA';
   const distance = state?.distance ?? '0.8km';
+  const orderId = state?.orderId ?? `ORD_${Date.now()}`;
+  const orderAmount = state?.totalPrice ?? 4500;
 
   const [selected, setSelected] = useState<PaymentMethod>(null);
   const [confirming, setConfirming] = useState(false);
-  const [paymentIntent, setPaymentIntent] = useState<any>(null);
+  const [showPaymentPanel, setShowPaymentPanel] = useState(false);
 
   const { currentUser } = useSupabase();
+
+  const handlePaymentComplete = useCallback((completedOrderId: string) => {
+    setTimeout(() => {
+      navigate('/fulfillment', {
+        state: { pharmacyName, medicineName, pharmacyLocation, paymentMethod: 'PAID' },
+      });
+    }, 1500);
+  }, [navigate, pharmacyName, medicineName, pharmacyLocation]);
 
   const handleConfirm = async () => {
     if (!selected) return;
     setConfirming(true);
 
     if (selected === 'pay_now') {
-      try {
-        const response = await fetch('/api/payment/initiate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: `ORD_${Date.now()}`,
-            amount: 4500,
-            customerName: currentUser?.full_name || 'Guest User',
-            customerEmail: currentUser?.email || 'guest@example.com',
-            method: 'BANK_TRANSFER'
-          })
-        });
-        const data = await response.json();
-        
-        if (data.virtualAccount) {
-          setPaymentIntent(data);
-        } else if (data.checkoutUrl) {
-          // Fallback to Paystack
-          window.location.href = data.checkoutUrl;
-        }
-        setConfirming(false);
-      } catch (err) {
-        setConfirming(false);
-        alert('Payment initialization failed. Please try again.');
-      }
+      // Show the integrated payment panel
+      setShowPaymentPanel(true);
+      setConfirming(false);
     } else {
       // POD or other bypassed method
       setTimeout(() => {
@@ -124,41 +114,20 @@ export default function Checkout() {
         <div className="grid gap-8 lg:grid-cols-5">
           {/* Left: Payment Selection */}
           <div className="lg:col-span-3 space-y-6">
-            {paymentIntent && paymentIntent.virtualAccount ? (
+            {showPaymentPanel ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="rounded-3xl border-2 border-emerald-500 bg-emerald-50 p-6 shadow-lg"
+                transition={{ duration: 0.3 }}
               >
-                <h2 className="text-xl font-bold text-slate-900 mb-2">Transfer to Virtual Account</h2>
-                <p className="text-sm text-slate-600 mb-6">Please transfer exactly <span className="font-bold">₦4,500</span> to the account below. Your order will be confirmed instantly.</p>
-                
-                <div className="space-y-4 bg-white p-5 rounded-2xl border border-emerald-100">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Bank Name</p>
-                    <p className="font-bold text-lg text-slate-900">{paymentIntent.virtualAccount.bankName}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Account Number</p>
-                    <p className="font-black text-3xl tracking-wide text-emerald-600">{paymentIntent.virtualAccount.accountNumber}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Account Name</p>
-                    <p className="font-bold text-slate-900">{paymentIntent.virtualAccount.accountName}</p>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
-                  <span className="text-sm font-bold text-emerald-800">Awaiting transfer... Do not close page.</span>
-                </div>
-                
-                <button 
-                   onClick={() => navigate('/fulfillment', { state: { pharmacyName, medicineName, pharmacyLocation, paymentMethod: 'BANK_TRANSFER' } })} 
-                   className="mt-5 text-xs text-slate-500 hover:text-slate-800 underline"
-                >
-                  Debug: Bypass and Complete
-                </button>
+                <PaymentPanel
+                  orderId={orderId}
+                  orderAmount={orderAmount}
+                  customerName={currentUser?.full_name || 'Guest User'}
+                  customerEmail={currentUser?.email || 'guest@example.com'}
+                  onPaymentComplete={handlePaymentComplete}
+                  onCancel={() => setShowPaymentPanel(false)}
+                />
               </motion.div>
             ) : (
              <div className="space-y-6">
@@ -194,7 +163,7 @@ export default function Checkout() {
                           {selected === 'pay_now' && <div className="h-2 w-2 rounded-full bg-white" />}
                         </div>
                       </div>
-                      <p className="mt-1 text-sm text-slate-500">Secure Transfer · Instant Confirmation</p>
+                      <p className="mt-1 text-sm text-slate-500">Bank Transfer or Card · Instant Confirmation</p>
                       <div className="mt-3 flex items-center gap-2">
                         <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
                           Recommended
@@ -345,7 +314,7 @@ export default function Checkout() {
               <div className="space-y-3 border-t border-slate-200 pt-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500">Subtotal</span>
-                  <span className="font-bold text-slate-900">₦4,000</span>
+                  <span className="font-bold text-slate-900">₦{(orderAmount - 500).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <div className="flex items-center gap-1.5">
@@ -356,7 +325,7 @@ export default function Checkout() {
                 </div>
                 <div className="flex justify-between border-t border-dashed border-slate-200 pt-3 text-base">
                   <span className="font-bold text-slate-900">Total</span>
-                  <span className="text-xl font-black text-emerald-600">₦4,500</span>
+                  <span className="text-xl font-black text-emerald-600">₦{orderAmount.toLocaleString()}</span>
                 </div>
               </div>
 

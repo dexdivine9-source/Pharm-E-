@@ -526,15 +526,13 @@ export default function Landing() {
           {/* FAQ CTA */}
           <div className="mt-16 flex flex-col items-center justify-center rounded-3xl bg-slate-50 p-10 text-center border border-slate-100">
             <p className="text-lg font-medium text-slate-800 mb-6">Still confused? Chat with our Pharmacist on WhatsApp</p>
-            <a
-              href="https://wa.me/yournumber"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => alert('Coming soon')}
               className="flex items-center gap-3 rounded-full bg-[#25D366] px-8 py-4 text-lg font-bold text-white shadow-xl shadow-emerald-200 transition-all hover:scale-105 active:scale-95"
             >
               <MessageSquare size={20} />
               Chat on WhatsApp
-            </a>
+            </button>
           </div>
         </div>
       </section>

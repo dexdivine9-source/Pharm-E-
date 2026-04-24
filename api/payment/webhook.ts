@@ -24,6 +24,9 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // RESPOND 200 IMMEDIATELY — Monnify/Paystack retry on timeout
+  res.status(200).json({ message: 'Webhook received' });
+
   try {
     // Determine provider from query param (e.g. /api/payment/webhook?provider=MONNIFY)
     const provider = String(req.query.provider || '').toUpperCase();
@@ -38,18 +41,17 @@ export default async function handler(req: any, res: any) {
       signature = req.headers['x-paystack-signature'] as string;
     }
     
-    if (!provider) return res.status(400).json({ error: 'Missing provider identifier.' });
-    if (!signature) return res.status(400).json({ error: 'Missing webhook signature.' });
+    if (!provider || !signature) {
+      console.error('[Webhook] Missing provider or signature');
+      return;
+    }
 
-    // Validate using the RAW string block or parsed JSON based on provider adapter needs
-    // Monnify standard requires stringified JSON which can differ based on engine.
-    // For absolute safety, Webhook parsers should pass `payload` down.
-    await paymentService.processWebhook(provider, payload, signature);
+    // Process webhook — validates signature, double-verifies, reconciles via FSM
+    const result = await paymentService.processWebhook(provider, payload, signature);
+    console.log(`[Webhook] Result: ${result.action} (${result.txnStatus})`);
 
-    // Always respond 200 to acknowledge receipt immediately
-    return res.status(200).json({ message: 'Webhook received' });
   } catch (error: any) {
-    console.error('Webhook Error:', error);
-    return res.status(500).json({ error: error.message || 'Server Error' });
+    // Already responded 200 — log error but don't send another response
+    console.error('[Webhook] Processing Error:', error.message || error);
   }
 }

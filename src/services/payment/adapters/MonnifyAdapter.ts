@@ -1,5 +1,10 @@
-import { IPaymentGateway, PaymentIntentRequest, PaymentIntentResponse, PaymentStatus, WebhookEvent } from '../types';
+import { IPaymentGateway, PaymentIntentRequest, PaymentIntentResponse, PaymentStatus, VerifyResult, WebhookEvent } from '../types';
 import crypto from 'crypto';
+
+// ─── Token Cache ───────────────────────────────────────────────────────────────
+let cachedToken: string | null = null;
+let tokenExpiresAt = 0;
+const TOKEN_TTL_MS = 50 * 60 * 1000; // Cache for 50 minutes (tokens expire at 60)
 
 export class MonnifyAdapter implements IPaymentGateway {
   private apiKey: string;
@@ -18,7 +23,16 @@ export class MonnifyAdapter implements IPaymentGateway {
     return 'MONNIFY';
   }
 
-  private async getAccessToken(): Promise<string> {
+  getSecretKey(): string {
+    return this.secretKey;
+  }
+
+  async getAccessToken(): Promise<string> {
+    // Return cached token if still valid
+    if (cachedToken && Date.now() < tokenExpiresAt) {
+      return cachedToken;
+    }
+
     const auth = Buffer.from(`${this.apiKey}:${this.secretKey}`).toString('base64');
     const response = await fetch(`${this.baseUrl}/api/v1/auth/login/`, {
       method: 'POST',
@@ -30,7 +44,9 @@ export class MonnifyAdapter implements IPaymentGateway {
     if (!response.ok) throw new Error('Monnify Auth Failed');
     
     const data = await response.json();
-    return data.responseBody.accessToken;
+    cachedToken = data.responseBody.accessToken;
+    tokenExpiresAt = Date.now() + TOKEN_TTL_MS;
+    return cachedToken!;
   }
 
   async initializePayment(req: PaymentIntentRequest): Promise<PaymentIntentResponse> {
@@ -67,17 +83,23 @@ export class MonnifyAdapter implements IPaymentGateway {
 
     return {
       provider: this.getProviderName(),
-      reference: body.transactionReference,
-      status: 'PENDING',
+      reference: body.transactionReference || reference,
+      status: 'INITIATED',
       virtualAccount: {
         accountNumber: body.accountNumber || 'Pending Account',
-        accountName: this.contractCode, // Usually the Merchant Name
-        bankName: body.bankName || 'Partner Bank'
+        accountName: body.accountName || this.contractCode,
+        bankName: body.bankName || 'Partner Bank',
+        expiresAt: body.expiresOn || null,
       }
     };
   }
 
   async verifyTransaction(transactionRef: string): Promise<PaymentStatus> {
+    const result = await this.verifyTransactionDetailed(transactionRef);
+    return result.status;
+  }
+
+  async verifyTransactionDetailed(transactionRef: string): Promise<VerifyResult> {
     const token = await this.getAccessToken();
     const response = await fetch(`${this.baseUrl}/api/v2/transactions/${encodeURIComponent(transactionRef)}`, {
       headers: {
@@ -87,13 +109,21 @@ export class MonnifyAdapter implements IPaymentGateway {
 
     const data = await response.json();
     if (!data.requestSuccessful) {
-      return 'FAILED';
+      return { status: 'FAILED', amountPaid: 0, totalPayable: 0 };
     }
 
-    const mnyStatus = data.responseBody.paymentStatus;
-    if (mnyStatus === 'PAID') return 'SUCCESS';
-    if (mnyStatus === 'EXPIRED' || mnyStatus === 'CANCELLED') return 'FAILED';
-    return 'PENDING';
+    const body = data.responseBody;
+    const mnyStatus = body.paymentStatus;
+
+    let status: PaymentStatus = 'PENDING';
+    if (mnyStatus === 'PAID') status = 'SUCCESS';
+    else if (mnyStatus === 'EXPIRED' || mnyStatus === 'CANCELLED' || mnyStatus === 'FAILED') status = 'FAILED';
+
+    return {
+      status,
+      amountPaid: body.amountPaid || 0,
+      totalPayable: body.amount || 0,
+    };
   }
 
   parseAndValidateWebhook(payload: any, signature: string): WebhookEvent {
@@ -116,7 +146,7 @@ export class MonnifyAdapter implements IPaymentGateway {
       provider: this.getProviderName(),
       status,
       transactionReference: payload.transactionReference,
-      amountPaid: payload.amountPaid,
+      amountPaid: payload.amountPaid || 0,
       rawPayload: payload
     };
   }

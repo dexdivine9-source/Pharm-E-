@@ -1,4 +1,4 @@
-import { IPaymentGateway, PaymentIntentRequest, PaymentIntentResponse, PaymentStatus, WebhookEvent } from '../types';
+import { IPaymentGateway, PaymentIntentRequest, PaymentIntentResponse, PaymentStatus, VerifyResult, WebhookEvent } from '../types';
 import crypto from 'crypto';
 
 export class PaystackAdapter implements IPaymentGateway {
@@ -11,6 +11,10 @@ export class PaystackAdapter implements IPaymentGateway {
 
   getProviderName(): string {
     return 'PAYSTACK';
+  }
+
+  getSecretKey(): string {
+    return this.secretKey;
   }
 
   async initializePayment(req: PaymentIntentRequest): Promise<PaymentIntentResponse> {
@@ -56,13 +60,18 @@ export class PaystackAdapter implements IPaymentGateway {
     return {
       provider: this.getProviderName(),
       reference: data.data.reference,
-      status: 'PENDING',
+      status: 'INITIATED',
       checkoutUrl: data.data.authorization_url,
       accessCode: data.data.access_code
     };
   }
 
   async verifyTransaction(transactionRef: string): Promise<PaymentStatus> {
+    const result = await this.verifyTransactionDetailed(transactionRef);
+    return result.status;
+  }
+
+  async verifyTransactionDetailed(transactionRef: string): Promise<VerifyResult> {
     const response = await fetch(`${this.baseUrl}/transaction/verify/${encodeURIComponent(transactionRef)}`, {
       headers: {
         'Authorization': `Bearer ${this.secretKey}`
@@ -71,13 +80,20 @@ export class PaystackAdapter implements IPaymentGateway {
 
     const data = await response.json();
     if (!data.status) {
-      return 'FAILED';
+      return { status: 'FAILED', amountPaid: 0, totalPayable: 0 };
     }
 
     const paystackStatus = data.data.status;
-    if (paystackStatus === 'success') return 'SUCCESS';
-    if (paystackStatus === 'abandoned' || paystackStatus === 'failed') return 'FAILED';
-    return 'PENDING';
+    let status: PaymentStatus = 'PENDING';
+    if (paystackStatus === 'success') status = 'SUCCESS';
+    else if (paystackStatus === 'abandoned' || paystackStatus === 'failed') status = 'FAILED';
+
+    return {
+      status,
+      // Paystack amount is in kobo, convert back to main currency
+      amountPaid: (data.data.amount || 0) / 100,
+      totalPayable: (data.data.requested_amount || data.data.amount || 0) / 100,
+    };
   }
 
   parseAndValidateWebhook(payload: any, signature: string): WebhookEvent {

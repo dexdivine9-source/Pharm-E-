@@ -16,7 +16,7 @@ export default defineConfig(({mode}) => {
         manifest: {
           name: 'Pharma-E Marketplace',
           short_name: 'Pharma-E',
-          description: 'Nigeria\\'s First AI-Powered Pharmaceutical Marketplace',
+          description: "Nigeria's First AI-Powered Pharmaceutical Marketplace",
           theme_color: '#10b981',
           background_color: '#0f172a',
           display: 'standalone',
