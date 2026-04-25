@@ -32,8 +32,8 @@ export default function AuthCallback() {
           // so that ProtectedRoute recognizes the user as logged in
           login(email, fullName)
 
-          // Navigate to the landing page (which triggers role selection)
-          navigate('/')
+          // Navigate directly to the dashboard instead of the landing page
+          navigate('/dashboard')
         } else {
           console.error('No session found after OAuth callback')
           navigate('/login')

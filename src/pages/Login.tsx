@@ -60,7 +60,7 @@ export default function Login() {
       if (error) throw error;
       
       login(email, data.user?.user_metadata?.full_name || fullName || 'Verified User');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Invalid verification code.');
     } finally {
