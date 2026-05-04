@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Truck, Bike, Car, Upload, CheckCircle2 } from 'lucide-react';
+import { Truck, Bike, Car, Upload, CheckCircle2, ArrowLeft, Building2, User } from 'lucide-react';
 import { useSupabase } from '../lib/mock-db';
 import { useNavigate } from 'react-router-dom';
 
 export default function LogisticsOnboarding() {
-  const { currentUser } = useSupabase();
+  const { currentUser, resetRole } = useSupabase();
   const navigate = useNavigate();
   const [vehicleType, setVehicleType] = useState<string>('');
+  const [riderType, setRiderType] = useState<'independent' | 'company' | null>(null);
   const [fileUploaded, setFileUploaded] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!vehicleType || !fileUploaded) return;
+    if (!vehicleType || !fileUploaded || !riderType) return;
     setSubmitted(true);
     // In a real app, this would update the user profile in Supabase
     // e.g., supabase.from('profiles').update({ vehicle_type: vehicleType }).eq('id', currentUser.id)
@@ -49,7 +50,20 @@ export default function LogisticsOnboarding() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8 text-center">
+      <div className="absolute top-4 left-4 sm:top-8 sm:left-8">
+        <button
+          onClick={() => {
+            resetRole();
+            navigate('/');
+          }}
+          className="flex items-center text-sm font-medium text-gray-500 hover:text-emerald-600 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Change Role
+        </button>
+      </div>
+
+      <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8 text-center pt-8">
         <h2 className="text-3xl font-extrabold text-gray-900">Driver Onboarding</h2>
         <p className="mt-2 text-gray-600">Complete your profile to start receiving deliveries.</p>
       </div>
@@ -58,6 +72,45 @@ export default function LogisticsOnboarding() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form onSubmit={handleSubmit} className="space-y-8">
             
+            {/* Rider Type Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-4">
+                Are you an independent rider or a logistics company?
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setRiderType('independent')}
+                  className={`relative flex items-center p-4 border rounded-xl focus:outline-none transition-all ${
+                    riderType === 'independent' 
+                      ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500' 
+                      : 'border-gray-200 hover:border-emerald-500'
+                  }`}
+                >
+                  <User className={`w-6 h-6 mr-3 ${riderType === 'independent' ? 'text-emerald-600' : 'text-gray-400'}`} />
+                  <div className="text-left">
+                    <span className="block text-sm font-medium text-gray-900">Independent Rider</span>
+                    <span className="block text-xs text-gray-500 mt-0.5">I work for myself</span>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRiderType('company')}
+                  className={`relative flex items-center p-4 border rounded-xl focus:outline-none transition-all ${
+                    riderType === 'company' 
+                      ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500' 
+                      : 'border-gray-200 hover:border-emerald-500'
+                  }`}
+                >
+                  <Building2 className={`w-6 h-6 mr-3 ${riderType === 'company' ? 'text-emerald-600' : 'text-gray-400'}`} />
+                  <div className="text-left">
+                    <span className="block text-sm font-medium text-gray-900">Logistics Company</span>
+                    <span className="block text-xs text-gray-500 mt-0.5">I manage multiple riders</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             {/* Vehicle Type Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-4">
@@ -153,7 +206,7 @@ export default function LogisticsOnboarding() {
             <div>
               <button
                 type="submit"
-                disabled={!vehicleType || !fileUploaded}
+                disabled={!vehicleType || !fileUploaded || !riderType}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Submit Application

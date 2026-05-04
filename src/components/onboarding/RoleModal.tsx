@@ -82,6 +82,15 @@ export default function RoleModal() {
               </button>
 
             </div>
+
+            <div className="bg-gray-50 border-t border-gray-100 p-4 text-center">
+              <button
+                onClick={() => handleSelectRole('customer')}
+                className="text-sm font-medium text-emerald-600 hover:text-emerald-500 transition-colors"
+              >
+                Skip for now and Browse as Guest &rarr;
+              </button>
+            </div>
           </motion.div>
         </motion.div>
       )}

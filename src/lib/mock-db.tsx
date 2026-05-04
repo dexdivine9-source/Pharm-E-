@@ -74,7 +74,9 @@ interface MockDBContextType {
   login: (email: string, fullName: string) => void;
   logout: () => void;
   setRole: (role: Role) => void;
-  verifyPharmacy: (pharmacyId: string) => void; // Admin only
+  resetRole: () => void;
+  verifyProfile: (profileId: string) => void;
+  rejectProfile: (profileId: string) => void;
   isAdmin: boolean;
   allProfiles: Profile[]; // For admin view
   
@@ -194,11 +196,30 @@ export function SupabaseMockProvider({ children }: { children: React.ReactNode }
     }));
   };
 
-  const verifyPharmacy = (pharmacyId: string) => {
+  const resetRole = () => {
+    if (!currentUserId) return;
+    setProfiles(prev => prev.map(p => {
+      if (p.id === currentUserId) {
+        return {
+          ...p,
+          role: '' as Role,
+          is_verified: false,
+        };
+      }
+      return p;
+    }));
+  };
+
+  const verifyProfile = (profileId: string) => {
     if (!isAdmin) return;
     setProfiles(prev => prev.map(p => 
-      p.id === pharmacyId ? { ...p, is_verified: true } : p
+      p.id === profileId ? { ...p, is_verified: true } : p
     ));
+  };
+
+  const rejectProfile = (profileId: string) => {
+    if (!isAdmin) return;
+    setProfiles(prev => prev.filter(p => p.id !== profileId));
   };
 
   // --- INVENTORY LOGIC ---
@@ -359,7 +380,9 @@ export function SupabaseMockProvider({ children }: { children: React.ReactNode }
       login,
       logout,
       setRole,
-      verifyPharmacy,
+      resetRole,
+      verifyProfile,
+      rejectProfile,
       isAdmin,
       allProfiles: profiles,
       inventory,

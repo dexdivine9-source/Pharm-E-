@@ -6,14 +6,19 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
   requireRole?: Role;
   requireVerified?: boolean;
+  requireAdmin?: boolean;
 }
 
-export default function ProtectedRoute({ children, requireRole, requireVerified }: ProtectedRouteProps) {
-  const { currentUser } = useSupabase();
+export default function ProtectedRoute({ children, requireRole, requireVerified, requireAdmin }: ProtectedRouteProps) {
+  const { currentUser, isAdmin } = useSupabase();
   const location = useLocation();
 
   if (!currentUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   if (requireRole && currentUser.role !== requireRole) {

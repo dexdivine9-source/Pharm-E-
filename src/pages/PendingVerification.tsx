@@ -1,10 +1,11 @@
-import React from 'react';
-import { ShieldAlert, CheckCircle2, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShieldAlert, CheckCircle2, LogOut, ArrowLeft, Upload } from 'lucide-react';
 import { useSupabase } from '../lib/mock-db';
 import { useNavigate } from 'react-router-dom';
 
 export default function PendingVerification() {
-  const { currentUser, isAdmin, verifyPharmacy, logout } = useSupabase();
+  const { currentUser, isAdmin, verifyProfile, logout, resetRole } = useSupabase();
+  const [fileUploaded, setFileUploaded] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -14,13 +15,26 @@ export default function PendingVerification() {
 
   const handleAdminVerify = () => {
     if (currentUser && isAdmin) {
-      verifyPharmacy(currentUser.id);
+      verifyProfile(currentUser.id);
       navigate('/portal');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="absolute top-4 left-4 sm:top-8 sm:left-8">
+        <button
+          onClick={() => {
+            resetRole();
+            navigate('/');
+          }}
+          className="flex items-center text-sm font-medium text-gray-500 hover:text-emerald-600 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Change Role
+        </button>
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 text-center border-t-4 border-amber-500">
           <ShieldAlert className="mx-auto h-16 w-16 text-amber-500 mb-4" />
@@ -30,7 +44,46 @@ export default function PendingVerification() {
             For the safety of the Pharma-E network, all pharmacies must be manually verified before accessing the portal.
           </p>
           
-          <div className="bg-amber-50 rounded-md p-4 mb-6">
+          <div className="mb-6 text-left">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Upload Business License (PCN)
+            </label>
+            <div 
+              className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md transition-colors ${
+                fileUploaded ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 hover:border-emerald-500'
+              }`}
+            >
+              <div className="space-y-1 text-center">
+                {fileUploaded ? (
+                  <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-500" />
+                ) : (
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                )}
+                <div className="flex text-sm text-gray-600 justify-center">
+                  <label
+                    htmlFor="file-upload"
+                    className="relative cursor-pointer rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none"
+                  >
+                    <span>{fileUploaded ? 'License Uploaded' : 'Upload a file'}</span>
+                    <input 
+                      id="file-upload" 
+                      name="file-upload" 
+                      type="file" 
+                      className="sr-only" 
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setFileUploaded(true);
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+                <p className="text-xs text-gray-500">PDF, JPG, PNG up to 10MB</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 rounded-md p-4 mb-6 text-left">
             <div className="flex">
               <div className="flex-shrink-0">
                 <ShieldAlert className="h-5 w-5 text-amber-400" aria-hidden="true" />

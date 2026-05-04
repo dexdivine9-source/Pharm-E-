@@ -26,6 +26,7 @@ import AuthCallback from './pages/AuthCallback';
 import LogisticsOnboarding from './pages/LogisticsOnboarding';
 import LogisticsDashboard from './pages/LogisticsDashboard';
 import Storefront from './pages/Storefront';
+import AdminDashboard from './pages/AdminDashboard';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -51,6 +52,9 @@ function AnimatedRoutes() {
         <Route path="/portal" element={<ProtectedRoute requireRole="pharmacy" requireVerified={true}><PharmacyPortal /></ProtectedRoute>} />
         <Route path="/pending-verification" element={<ProtectedRoute requireRole="pharmacy" requireVerified={false}><PendingVerification /></ProtectedRoute>} />
 
+        {/* Admin Route */}
+        <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
+        
         {/* Logistics Routes */}
         <Route path="/logistics-onboarding" element={<ProtectedRoute requireRole="logistics" requireVerified={false}><LogisticsOnboarding /></ProtectedRoute>} />
         <Route path="/logistics" element={<ProtectedRoute requireRole="logistics" requireVerified={true}><LogisticsDashboard /></ProtectedRoute>} />
