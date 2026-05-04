@@ -23,15 +23,18 @@ export default function ProtectedRoute({ children, requireRole, requireVerified 
     if (currentUser.role === 'pharmacy') {
       return <Navigate to={currentUser.is_verified ? "/portal" : "/pending-verification"} replace />;
     }
+    if (currentUser.role === 'logistics') {
+      return <Navigate to={currentUser.is_verified ? "/logistics" : "/logistics-onboarding"} replace />;
+    }
   }
 
-  // Handle Verification specific routing for pharmacies
-  if (requireRole === 'pharmacy' && requireVerified !== undefined) {
+  // Handle Verification specific routing for pharmacies and logistics
+  if ((requireRole === 'pharmacy' || requireRole === 'logistics') && requireVerified !== undefined) {
     if (requireVerified && !currentUser.is_verified) {
-      return <Navigate to="/pending-verification" replace />;
+      return <Navigate to={requireRole === 'pharmacy' ? "/pending-verification" : "/logistics-onboarding"} replace />;
     }
     if (!requireVerified && currentUser.is_verified) {
-      return <Navigate to="/portal" replace />;
+      return <Navigate to={requireRole === 'pharmacy' ? "/portal" : "/logistics"} replace />;
     }
   }
 
@@ -47,6 +50,9 @@ export function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
     }
     if (currentUser.role === 'pharmacy') {
       return <Navigate to={currentUser.is_verified ? "/portal" : "/pending-verification"} replace />;
+    }
+    if (currentUser.role === 'logistics') {
+      return <Navigate to={currentUser.is_verified ? "/logistics" : "/logistics-onboarding"} replace />;
     }
   }
 

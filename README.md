@@ -17,10 +17,11 @@ Pharma-E provides a three-way fulfillment model designed for maximum user-friend
 * **15-Minute Delivery**: A dedicated logistics network of riders ensuring your verified meds reach your doorstep in under 15 minutes.
 
 ## 🛠️ Technical Stack
-* **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS
+* **Frontend**: React 19, Vite, TypeScript, Tailwind CSS v4
 * **Icons**: Lucide React
-* **Backend/Database**: Firebase Firestore
-* **Authentication**: Firebase Auth (Google & Apple One-Tap Sign-in)
+* **Backend/Database**: Supabase (PostgreSQL, RLS)
+* **Authentication**: Supabase Auth
+* **Payment Gateways**: Interswitch, Monnify, Paystack
 * **AI Integration**: Gemini API (for conversational search and prescription analysis)
 * **Deployment**: Vercel
 
@@ -34,13 +35,13 @@ Pharma-E provides a three-way fulfillment model designed for maximum user-friend
 
 ### Prerequisites
 * Node.js 18.x or higher
-* A Firebase Project
-* Google/Apple Developer accounts (for Auth)
+* A Supabase Project
+* Gemini API Key
 
 ### Installation
 Clone the repository:
 ```bash
-git clone https://github.com/your-username/gopharma.git
+git clone https://github.com/dexdivine9-source/Pharm-E-.git
 cd gopharma
 ```
 
@@ -49,11 +50,11 @@ Install dependencies:
 npm install
 ```
 
-Set up your environment variables (`.env.local`):
+Set up your environment variables (`.env`):
 ```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_id
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_GEMINI_API_KEY=your_gemini_api_key
 ```
 
 Run the development server:

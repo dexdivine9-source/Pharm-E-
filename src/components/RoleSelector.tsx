@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, User } from 'lucide-react';
+import { Building2, User, Truck } from 'lucide-react';
 import { useSupabase, Role } from '../lib/mock-db';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -12,6 +12,8 @@ export default function RoleSelector() {
     setRole(role);
     if (role === 'customer') {
       navigate('/dashboard');
+    } else if (role === 'logistics') {
+      navigate('/logistics-onboarding');
     } else {
       navigate('/pending-verification');
     }
@@ -33,9 +35,9 @@ export default function RoleSelector() {
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             
             {/* Customer Card */}
             <button
@@ -66,6 +68,22 @@ export default function RoleSelector() {
               <span className="block text-lg font-semibold text-gray-900">I am a Pharmacy</span>
               <span className="mt-2 block text-sm text-gray-500">
                 I want to list my inventory and fulfill orders in the network.
+              </span>
+            </button>
+
+            {/* Logistics Card */}
+            <button
+              onClick={() => handleSelectRole('logistics')}
+              className={cn(
+                "relative block w-full border-2 border-gray-200 rounded-xl p-8 text-center",
+                "hover:border-emerald-500 hover:bg-emerald-50 transition-all duration-200",
+                "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+              )}
+            >
+              <Truck className="mx-auto h-12 w-12 text-emerald-600 mb-4" />
+              <span className="block text-lg font-semibold text-gray-900">Logistics</span>
+              <span className="mt-2 block text-sm text-gray-500">
+                I am a delivery professional and want to fulfill network shipments.
               </span>
             </button>
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSupabase, Role } from '../../lib/mock-db';
-import { User, Store, Activity } from 'lucide-react';
+import { User, Store, Activity, Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -18,6 +18,8 @@ export default function RoleModal() {
       navigate('/dashboard');
     } else if (role === 'pharmacy') {
       navigate('/portal'); // Will route to /pending-verification inherently due to our app's ProtectedRoute rules!
+    } else if (role === 'logistics') {
+      navigate('/logistics-onboarding');
     }
   };
 
@@ -33,7 +35,7 @@ export default function RoleModal() {
           <motion.div 
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden"
+            className="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden"
           >
             <div className="bg-emerald-600 p-6 text-center text-white">
               <Activity className="w-12 h-12 mx-auto mb-4 text-emerald-100" />
@@ -41,7 +43,7 @@ export default function RoleModal() {
               <p className="mt-2 text-emerald-100">Welcome to Pharma-E. Please select how you will use the network.</p>
             </div>
             
-            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Customer Card */}
               <button
@@ -65,6 +67,18 @@ export default function RoleModal() {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Pharmacy</h3>
                 <p className="text-sm text-gray-500">I own a licensed pharmacy and want to fulfill network orders.</p>
+              </button>
+
+              {/* Logistics Card */}
+              <button
+                onClick={() => handleSelectRole('logistics')}
+                className="group relative flex flex-col items-center justify-center p-8 text-center rounded-xl border-2 border-gray-100 hover:border-emerald-500 hover:bg-emerald-50 transition-all focus:outline-none focus:ring-4 focus:ring-emerald-500/20"
+              >
+                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors text-emerald-600">
+                  <Truck className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Logistics</h3>
+                <p className="text-sm text-gray-500">I am a delivery professional and want to fulfill network shipments.</p>
               </button>
 
             </div>

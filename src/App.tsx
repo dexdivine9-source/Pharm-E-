@@ -23,6 +23,8 @@ import ProtectedRoute, { PublicOnlyRoute } from './components/ProtectedRoute';
 import RoleModal from './components/onboarding/RoleModal';
 import ScannerPage from './pages/ScannerPage';
 import AuthCallback from './pages/AuthCallback';
+import LogisticsOnboarding from './pages/LogisticsOnboarding';
+import LogisticsDashboard from './pages/LogisticsDashboard';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -46,6 +48,10 @@ function AnimatedRoutes() {
         {/* Pharmacy Routes */}
         <Route path="/portal" element={<ProtectedRoute requireRole="pharmacy" requireVerified={true}><PharmacyPortal /></ProtectedRoute>} />
         <Route path="/pending-verification" element={<ProtectedRoute requireRole="pharmacy" requireVerified={false}><PendingVerification /></ProtectedRoute>} />
+
+        {/* Logistics Routes */}
+        <Route path="/logistics-onboarding" element={<ProtectedRoute requireRole="logistics" requireVerified={false}><LogisticsOnboarding /></ProtectedRoute>} />
+        <Route path="/logistics" element={<ProtectedRoute requireRole="logistics" requireVerified={true}><LogisticsDashboard /></ProtectedRoute>} />
 
         {/* Legacy Routes (Keep for compatibility if used) */}
         <Route path="/checkout" element={<Checkout />} />
