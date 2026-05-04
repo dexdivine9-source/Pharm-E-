@@ -2,24 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { useSupabase } from '../lib/mock-db';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { Activity, AlertCircle, Mail, ArrowLeft, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import SocialButtons from '../components/auth/SocialButtons';
+import { Activity, AlertCircle, Mail, ArrowLeft, ShieldCheck, CheckCircle2, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Login() {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPasswordFallback, setShowPasswordFallback] = useState(false);
+  const [timer, setTimer] = useState(60);
+  const [otp, setOtp] = useState('');
+  const [showOtpInput, setShowOtpInput] = useState(false);
   
   const { login, allProfiles } = useSupabase();
   const navigate = useNavigate();
 
-  const handleManualAuth = async (e: React.FormEvent) => {
+  useEffect(() => {
+    let interval: any;
+    if (isVerifying && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setShowPasswordFallback(true);
+    }
+    return () => clearInterval(interval);
+  }, [isVerifying, timer]);
+
+  const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return;
     setError(null);
     setLoading(true);
 
@@ -27,42 +40,37 @@ export default function Login() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          data: {
-            full_name: fullName
-          }
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         }
       });
-
       if (error) throw error;
-      
       setIsVerifying(true);
+      setTimer(60);
     } catch (err: any) {
-      setError(err.message || 'Failed to send verification code.');
+      setError(err.message || 'Failed to send magic link.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerifyOTP = async (e: React.FormEvent) => {
+  const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!otp) return;
     setError(null);
-    
-    const token = otp.join('');
-    
+    setLoading(true);
     try {
       const { data, error } = await supabase.auth.verifyOtp({
         email,
-        token,
+        token: otp,
         type: 'email'
       });
-
       if (error) throw error;
       
-      login(email, data.user?.user_metadata?.full_name || fullName || 'Verified User');
+      const fullName = data.user?.user_metadata?.full_name || email.split('@')[0] || 'User';
+      login(email, fullName);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Invalid verification code.');
+      setError(err.message || 'Invalid OTP code.');
     } finally {
       setLoading(false);
     }
@@ -87,101 +95,67 @@ export default function Login() {
     }
   };
 
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) value = value.slice(-1);
-    if (!/^\d*$/.test(value)) return;
-
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Auto-focus next input
-    if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
-      nextInput?.focus();
-    }
-  };
-
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`);
-      prevInput?.focus();
-    }
-  };
-
   if (isVerifying) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="min-h-screen bg-[#A5B4FC] relative flex flex-col items-center justify-center p-4 overflow-hidden">
+        {/* Animated mesh gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 via-emerald-100 to-blue-200 animate-pulse" />
+        
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="sm:mx-auto sm:w-full sm:max-w-md"
+          className="relative w-full max-w-sm"
         >
-          <div className="bg-white py-10 px-6 sm:px-12 rounded-[2.5rem] shadow-2xl shadow-emerald-100/50 border border-slate-100">
-            <button 
-              onClick={() => setIsVerifying(false)}
-              className="mb-8 flex items-center gap-2 text-slate-400 hover:text-emerald-600 transition-colors font-bold text-sm"
-            >
-              <ArrowLeft size={18} /> Back
-            </button>
-
-            <div className="text-center mb-8">
-              <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6">
-                <ShieldCheck className="w-8 h-8 text-emerald-600" />
-              </div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Verify Email</h2>
-              <p className="mt-2 text-slate-500">
-                We've sent a 6-digit code to <span className="font-bold text-slate-900">{email}</span>
-              </p>
+          <div className="bg-white/40 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-10 shadow-2xl text-center">
+            <div className="mx-auto w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mb-6 shadow-lg">
+              <ShieldCheck className="h-8 w-8 text-white" />
             </div>
-
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="p-4 bg-red-50 text-red-700 text-sm rounded-2xl flex items-start gap-3 border border-red-100 mb-6"
-                >
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span className="font-medium">{error}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <form onSubmit={handleVerifyOTP} className="space-y-8">
-              <div className="flex justify-between gap-2">
-                {otp.map((digit, idx) => (
-                  <input
-                    key={idx}
-                    id={`otp-${idx}`}
-                    type="text"
-                    inputMode="numeric"
-                    value={digit}
-                    onChange={(e) => handleOtpChange(idx, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(idx, e)}
-                    className="w-12 h-14 text-center text-2xl font-black text-emerald-600 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all"
-                    required
-                  />
-                ))}
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading || otp.some(d => !d)}
-                className="w-full h-14 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all active:scale-[0.98] shadow-xl shadow-slate-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">Check your email</h2>
+            <p className="text-slate-600 mb-8">We've sent a magic login link to <span className="font-semibold">{email}</span></p>
+            
+            <div className="space-y-4">
+              <button 
+                onClick={() => setIsVerifying(false)}
+                className="w-full py-4 bg-white/60 hover:bg-white/80 rounded-full text-slate-700 font-bold transition-all border border-white/50"
               >
-                {loading ? (
-                  <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>Verify & Continue <CheckCircle2 size={20} /></>
-                )}
+                Back to Login
               </button>
-
-              <p className="text-center text-sm text-slate-400">
-                Didn't receive the code? <button type="button" className="text-emerald-600 font-bold hover:underline">Resend</button>
-              </p>
-            </form>
+              
+              {showOtpInput ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <form onSubmit={handleVerifyOtp} className="space-y-4">
+                    <input 
+                      type="text" 
+                      placeholder="Enter 6-digit code" 
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="w-full py-4 text-center tracking-[0.5em] font-mono text-xl bg-white/60 border border-white/50 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-slate-400 text-slate-800"
+                      maxLength={6}
+                      required
+                    />
+                    <button 
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-4 bg-emerald-500 text-white rounded-full font-bold hover:bg-emerald-600 shadow-lg transition-all disabled:opacity-50"
+                    >
+                      {loading ? "Verifying..." : "Verify Code"}
+                    </button>
+                  </form>
+                </motion.div>
+              ) : showPasswordFallback ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <p className="text-xs text-slate-500 mb-2">Taking too long?</p>
+                  <button 
+                    onClick={() => setShowOtpInput(true)}
+                    className="w-full py-4 bg-emerald-500 text-white rounded-full font-bold hover:bg-emerald-600 shadow-lg transition-all"
+                  >
+                    Enter Code Manually
+                  </button>
+                </motion.div>
+              ) : (
+                <p className="text-xs text-slate-400">Resend in {timer}s</p>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>
@@ -189,115 +163,77 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#A5B4FC] relative flex flex-col items-center justify-center p-4 overflow-hidden font-sans">
+      {/* Mesh gradient effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 via-emerald-100 to-blue-200" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-300 rounded-full blur-[120px] opacity-40 animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-300 rounded-full blur-[120px] opacity-40 animate-pulse delay-1000" />
+
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sm:mx-auto sm:w-full sm:max-w-md"
+        className="relative w-full max-w-sm space-y-6"
       >
-        <div className="text-center mb-10">
-          <div className="mx-auto w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 mb-6">
-            <Activity className="h-9 w-9 text-white" />
-          </div>
-          <h2 className="text-4xl font-black text-slate-900 tracking-tighter">
-            {isSignUp ? 'Create account' : 'Welcome back'}
-          </h2>
-          <p className="mt-3 text-slate-500 text-lg">
-            {isSignUp ? 'Start your healthcare journey today' : 'Access your medical dashboard'}
-          </p>
-        </div>
-
-        <div className="bg-white py-10 px-6 sm:px-12 rounded-[2.5rem] shadow-2xl shadow-emerald-100/50 border border-slate-100">
-          
-          <SocialButtons onSocialLogin={handleSocialLogin} />
-
-          <div className="my-8 flex items-center gap-4">
-            <div className="flex-1 h-px bg-slate-100" />
-            <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Or email</span>
-            <div className="flex-1 h-px bg-slate-100" />
-          </div>
-
-          <form className="space-y-5" onSubmit={handleManualAuth}>
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="p-4 bg-red-50 text-red-700 text-sm rounded-2xl flex items-start gap-3 border border-red-100 mb-4"
-                >
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span className="font-medium">{error}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {isSignUp && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <div className="relative group">
-                  <input
-                    id="fullName"
-                    type="text"
-                    required={isSignUp}
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="peer w-full px-5 py-4 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all placeholder-transparent"
-                    placeholder="Full Name"
-                  />
-                  <label htmlFor="fullName" className="absolute left-5 top-4 text-slate-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:left-4 peer-focus:text-xs peer-focus:text-emerald-600 peer-focus:bg-white peer-focus:px-1 font-bold pointer-events-none">
-                    Full Name
-                  </label>
-                </div>
-              </motion.div>
-            )}
-
-            <div className="relative">
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="peer w-full px-5 py-4 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all placeholder-transparent"
-                placeholder="Email address"
-              />
-              <label htmlFor="email" className="absolute left-5 top-4 text-slate-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:left-4 peer-focus:text-xs peer-focus:text-emerald-600 peer-focus:bg-white peer-focus:px-1 font-bold pointer-events-none">
-                Email address
-              </label>
-            </div>
-
-            <button
+        {/* Email Pill Input */}
+        <div className="bg-white/40 backdrop-blur-xl border border-white/40 rounded-full p-2 shadow-xl">
+          <form onSubmit={handleMagicLink} className="flex items-center gap-3 px-4 h-14">
+            <Mail className="h-5 w-5 text-slate-600 shrink-0" />
+            <input 
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-transparent border-none focus:ring-0 text-slate-800 placeholder-slate-500 w-full font-medium"
+              required
+            />
+            <button 
               type="submit"
               disabled={loading}
-              className="w-full h-14 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all active:scale-[0.98] shadow-xl shadow-emerald-100 flex items-center justify-center gap-2"
+              className="text-[#6366F1] font-bold hover:opacity-70 transition-opacity disabled:opacity-50"
             >
-              {loading ? (
-                <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>{isSignUp ? 'Create Account' : 'Send OTP Code'} <ArrowLeft className="rotate-180" size={18} /></>
-              )}
+              {loading ? "..." : "Submit"}
             </button>
           </form>
+        </div>
 
-          <div className="mt-8 text-center">
-            <button
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setError(null);
-              }}
-              className="text-slate-400 hover:text-emerald-600 text-sm font-bold transition-colors"
-            >
-              {isSignUp ? (
-                <>Already have an account? <span className="text-emerald-600">Sign in</span></>
-              ) : (
-                <>Don't have an account? <span className="text-emerald-600">Sign up</span></>
-              )}
-            </button>
-          </div>
-          
+        {/* OAuth Buttons */}
+        <div className="space-y-4">
+          <button 
+            onClick={() => handleSocialLogin('google')}
+            className="w-full h-18 bg-white/40 backdrop-blur-xl border border-white/40 rounded-full p-2 flex items-center shadow-lg group hover:bg-white/60 transition-all"
+          >
+            <div className="bg-white h-14 w-14 rounded-full flex items-center justify-center shadow-sm">
+              <svg className="h-6 w-6" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5.04c1.94 0 3.51.68 4.75 1.81l3.5-3.5C18.16 1.42 15.34 0 12 0 7.31 0 3.25 2.67 1.25 6.58l3.92 3.04c.93-2.8 3.53-4.58 6.83-4.58z"/>
+                <path fill="#4285F4" d="M23.49 12.27c0-.85-.07-1.48-.22-2.11h-11.27v4.01h6.44c-.28 1.48-1.12 2.74-2.38 3.58l3.72 2.88c2.18-2.02 3.44-5.02 3.44-8.36z"/>
+                <path fill="#FBBC05" d="M5.17 14.85c-.24-.72-.38-1.49-.38-2.3s.14-1.58.38-2.3L1.25 7.21C.45 8.7 0 10.3 0 12s.45 3.3 1.25 4.79l3.92-2.94z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.72-2.88c-1.1.74-2.51 1.18-4.21 1.18-3.3 0-6.1-2.26-7.1-5.31l-3.92 2.94C3.06 20.94 6.94 24 12 24z"/>
+              </svg>
+            </div>
+            <span className="flex-1 text-center font-bold text-slate-800 text-lg">Google</span>
+          </button>
+
+          <button 
+            onClick={() => handleSocialLogin('apple')}
+            className="w-full h-18 bg-white/40 backdrop-blur-xl border border-white/40 rounded-full p-2 flex items-center shadow-lg group hover:bg-white/60 transition-all"
+          >
+            <div className="bg-white h-14 w-14 rounded-full flex items-center justify-center shadow-sm">
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.05 20.28c-.96.95-2.05 1.72-3.23 1.72-1.14 0-1.49-.69-2.82-.69-1.33 0-1.74.67-2.82.67-1.12 0-2.15-.7-3.14-1.68C2.9 18.23 1.54 15.36 1.54 12.35c0-2.97 1.86-4.54 3.67-4.54 1.05 0 1.86.63 2.69.63.83 0 1.63-.67 2.87-.67 1.14 0 2.03.54 2.8 1.55-1.58.91-1.31 3.26.24 3.91-.71 1.73-1.63 3.42-2.76 5.05zm-2.07-15.11c-.56.67-1.49 1.13-2.38 1.06-.1-.85.34-1.78.85-2.39.58-.69 1.56-1.14 2.38-1.06.11.89-.29 1.72-.85 2.39z"/>
+              </svg>
+            </div>
+            <span className="flex-1 text-center font-bold text-slate-800 text-lg">Apple</span>
+          </button>
+        </div>
+
+        {/* Footer Links */}
+        <div className="pt-8 text-center space-y-4">
+          <p className="text-slate-500 text-sm">
+            By logging in or creating an account, you agree to our{" "}
+            <a href="#" className="underline font-semibold">Terms of Use</a>{" "}
+            and{" "}
+            <a href="#" className="underline font-semibold">Privacy Policy</a>.
+          </p>
         </div>
       </motion.div>
     </div>
