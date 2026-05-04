@@ -17,6 +17,8 @@ export interface InventoryItem {
   med_name: string;
   stock_level: number;
   price: number;
+  category?: string;
+  image_url?: string;
 }
 
 export type OrderStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED_ROUTING' | 'COMPLETED';
@@ -80,7 +82,7 @@ interface MockDBContextType {
   inventory: InventoryItem[];
   getPharmacyInventory: () => InventoryItem[];
   getAllAvailableInventory: () => AvailableInventoryItem[]; // For customers
-  addInventoryItem: (med_name: string, stock_level: number, price: number) => void;
+  addInventoryItem: (med_name: string, stock_level: number, price: number, category?: string, image_url?: string) => void;
   updateInventoryItem: (id: string, updates: Partial<InventoryItem>) => void;
   deleteInventoryItem: (id: string) => void;
 
@@ -223,14 +225,16 @@ export function SupabaseMockProvider({ children }: { children: React.ReactNode }
       });
   };
 
-  const addInventoryItem = (med_name: string, stock_level: number, price: number) => {
+  const addInventoryItem = (med_name: string, stock_level: number, price: number, category?: string, image_url?: string) => {
     if (!currentUser || currentUser.role !== 'pharmacy') return;
     const newItem: InventoryItem = {
       id: Math.random().toString(36).substring(2, 9),
       pharmacy_id: currentUser.id,
       med_name,
       stock_level,
-      price
+      price,
+      category,
+      image_url
     };
     setInventory(prev => [...prev, newItem]);
   };

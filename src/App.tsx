@@ -25,6 +25,7 @@ import ScannerPage from './pages/ScannerPage';
 import AuthCallback from './pages/AuthCallback';
 import LogisticsOnboarding from './pages/LogisticsOnboarding';
 import LogisticsDashboard from './pages/LogisticsDashboard';
+import Storefront from './pages/Storefront';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -38,6 +39,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/store/:pharmacyId" element={<Storefront />} />
         
         {/* Customer Routes */}
         <Route path="/search" element={<ProtectedRoute requireRole="customer"><MedSearch /></ProtectedRoute>} />

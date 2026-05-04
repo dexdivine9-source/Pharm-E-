@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useSupabase } from '../lib/mock-db';
-import { LogOut, Plus, Search, Package, Edit2, Trash2, ChevronLeft, ChevronRight, ClipboardList, CheckCircle2, XCircle, Clock, AlertTriangle, ScanLine } from 'lucide-react';
+import { LogOut, Plus, Search, Package, Edit2, Trash2, ChevronLeft, ChevronRight, ClipboardList, CheckCircle2, XCircle, Clock, AlertTriangle, ScanLine, Link as LinkIcon, RefreshCw, Smartphone } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function PharmacyPortal() {
@@ -21,6 +21,9 @@ export default function PharmacyPortal() {
   const [newMedName, setNewMedName] = useState('');
   const [newStock, setNewStock] = useState<number | ''>('');
   const [newPrice, setNewPrice] = useState<number | ''>('');
+  const [newCategory, setNewCategory] = useState('Antibiotics');
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [stockVerifiedToday, setStockVerifiedToday] = useState(false);
 
   const itemsPerPage = 5;
 
@@ -33,11 +36,13 @@ export default function PharmacyPortal() {
     e.preventDefault();
     if (!newMedName || newStock === '' || newPrice === '') return;
     
-    addInventoryItem(newMedName, Number(newStock), Number(newPrice));
+    addInventoryItem(newMedName, Number(newStock), Number(newPrice), newCategory, newImageUrl || undefined);
     
     setNewMedName('');
     setNewStock('');
     setNewPrice('');
+    setNewCategory('Antibiotics');
+    setNewImageUrl('');
     setIsAdding(false);
   };
 
@@ -93,6 +98,17 @@ export default function PharmacyPortal() {
               <ScanLine className="h-4 w-4" />
               Scan Products
             </Link>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/store/${currentUser?.id}`;
+                navigator.clipboard.writeText(url);
+                alert("Live link copied to clipboard: " + url);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 border border-emerald-500 text-white text-sm font-bold rounded-lg transition-colors"
+            >
+              <LinkIcon className="h-4 w-4" />
+              Copy Store Link
+            </button>
             <button onClick={handleLogout} className="text-emerald-100 hover:text-white transition-colors">
               <LogOut className="h-5 w-5" />
             </button>
@@ -193,7 +209,7 @@ export default function PharmacyPortal() {
         {activeTab === 'inventory' && (
           <>
             {/* Top Controls: Search and Add Button */}
-            <div className="sm:flex sm:items-center sm:justify-between mb-8">
+            <div className="sm:flex sm:items-center sm:justify-between mb-8 gap-4">
               <div className="relative max-w-md w-full mb-4 sm:mb-0">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-gray-400" />
@@ -206,21 +222,45 @@ export default function PharmacyPortal() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <button
-                onClick={() => setIsAdding(!isAdding)}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-              >
-                <Plus className="-ml-1 mr-2 h-5 w-5" />
-                Add Medication
-              </button>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => alert("POS API Documentation sent to your email. You can generate API keys here soon.")}
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+                >
+                  <RefreshCw className="-ml-1 mr-2 h-4 w-4 text-emerald-600" />
+                  POS Sync
+                </button>
+                <button
+                  onClick={() => setIsAdding(!isAdding)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                >
+                  <Plus className="-ml-1 mr-2 h-5 w-5" />
+                  Fast Add
+                </button>
+              </div>
             </div>
+
+            {!stockVerifiedToday && (
+              <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-md flex justify-between items-center shadow-sm">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-5 w-5 text-yellow-400 mr-3" />
+                  <p className="text-sm text-yellow-700 font-medium">Daily Stock Verification: Please confirm your inventory levels match your physical stock to prevent rejected orders.</p>
+                </div>
+                <button 
+                  onClick={() => setStockVerifiedToday(true)}
+                  className="ml-4 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-xs font-bold px-3 py-1.5 rounded-md border border-yellow-200 transition-colors"
+                >
+                  Verify All Correct
+                </button>
+              </div>
+            )}
 
             {/* Add Medication Form */}
             {isAdding && (
               <div className="bg-white shadow sm:rounded-lg mb-8 border-t-4 border-emerald-500 overflow-hidden transition-all">
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Add New Inventory Item</h3>
-                  <form onSubmit={handleAddSubmit} className="grid grid-cols-1 gap-y-6 sm:grid-cols-4 sm:gap-x-4">
+                  <form onSubmit={handleAddSubmit} className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-4">
                     <div className="sm:col-span-2">
                       <label htmlFor="medName" className="block text-sm font-medium text-gray-700">Medication Name</label>
                       <input
@@ -233,7 +273,7 @@ export default function PharmacyPortal() {
                         placeholder="e.g., Amoxicillin 500mg"
                       />
                     </div>
-                    <div>
+                    <div className="sm:col-span-1">
                       <label htmlFor="stock" className="block text-sm font-medium text-gray-700">Stock Level</label>
                       <input
                         type="number"
@@ -246,7 +286,7 @@ export default function PharmacyPortal() {
                         placeholder="e.g., 50"
                       />
                     </div>
-                    <div>
+                    <div className="sm:col-span-1">
                       <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price (₦)</label>
                       <input
                         type="number"
@@ -260,7 +300,31 @@ export default function PharmacyPortal() {
                         placeholder="e.g., 1500"
                       />
                     </div>
-                    <div className="sm:col-span-4 flex justify-end space-x-3 mt-4">
+                    <div className="sm:col-span-1">
+                      <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+                      <select
+                        id="category"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                      >
+                        <option>Antibiotics</option>
+                        <option>Pain Relief</option>
+                        <option>Vitamins</option>
+                        <option>First Aid</option>
+                        <option>Chronic Care</option>
+                      </select>
+                    </div>
+                    <div className="sm:col-span-1">
+                      <label className="block text-sm font-medium text-gray-700">Quick Image</label>
+                      <div className="mt-1 flex items-center">
+                        <button type="button" className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                          <Smartphone className="h-4 w-4 mr-2 text-gray-400" />
+                          Snap
+                        </button>
+                      </div>
+                    </div>
+                    <div className="sm:col-span-6 flex justify-end space-x-3 mt-4 border-t pt-4">
                       <button
                         type="button"
                         onClick={() => setIsAdding(false)}
