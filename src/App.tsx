@@ -14,6 +14,7 @@ import Pickup from './pages/Pickup';
 
 // New Production Pages
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import CustomerDashboard from './pages/CustomerDashboard';
 import PharmacyPortal from './pages/PharmacyPortal';
 import PendingVerification from './pages/PendingVerification';
@@ -40,6 +41,7 @@ function AnimatedRoutes() {
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+        <Route path="/signup" element={<PublicOnlyRoute><SignUp /></PublicOnlyRoute>} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/store/:pharmacyId" element={<Storefront />} />
         
