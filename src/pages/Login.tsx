@@ -174,6 +174,15 @@ export default function Login() {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-300 rounded-full blur-[120px] opacity-40 animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-200 rounded-full blur-[120px] opacity-40 animate-pulse delay-1000" />
 
+      {/* Back Button */}
+      <button 
+        onClick={() => navigate('/')}
+        className="absolute top-6 left-6 flex items-center gap-2 text-emerald-800/60 hover:text-emerald-800 transition-colors font-medium bg-white/30 hover:bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/40 shadow-sm"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to Home
+      </button>
+
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
