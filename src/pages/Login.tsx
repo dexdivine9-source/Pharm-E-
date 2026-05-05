@@ -193,10 +193,14 @@ export default function Login() {
             />
             <button 
               type="submit"
-              disabled={loading}
-              className="text-[#6366F1] font-bold hover:opacity-70 transition-opacity disabled:opacity-50"
+              disabled={loading || !email}
+              className={`font-bold transition-all disabled:opacity-50 flex items-center gap-1 ${email ? 'text-[#6366F1] hover:opacity-70' : 'text-slate-400'}`}
             >
-              {loading ? "..." : "Submit"}
+              {loading ? "..." : (
+                <>
+                  Enter <ArrowLeft className="w-4 h-4 rotate-180" />
+                </>
+              )}
             </button>
           </form>
         </div>
