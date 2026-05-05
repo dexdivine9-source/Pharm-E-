@@ -27,6 +27,7 @@ import LogisticsOnboarding from './pages/LogisticsOnboarding';
 import LogisticsDashboard from './pages/LogisticsDashboard';
 import Storefront from './pages/Storefront';
 import AdminDashboard from './pages/AdminDashboard';
+import PwaInstallBanner from './components/PwaInstallBanner';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -69,6 +70,7 @@ function AnimatedRoutes() {
       </Routes>
     </AnimatePresence>
     <RoleModal />
+    <PwaInstallBanner />
     </>
   );
 }
