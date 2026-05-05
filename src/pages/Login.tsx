@@ -102,9 +102,9 @@ export default function Login() {
 
   if (isVerifying) {
     return (
-      <div className="min-h-screen bg-[#A5B4FC] relative flex flex-col items-center justify-center p-4 overflow-hidden">
+      <div className="min-h-screen bg-emerald-50 relative flex flex-col items-center justify-center p-4 overflow-hidden">
         {/* Animated mesh gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 via-emerald-100 to-blue-200 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 via-white to-teal-100 animate-pulse" />
         
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -168,11 +168,11 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#A5B4FC] relative flex flex-col items-center justify-center p-4 overflow-hidden font-sans">
+    <div className="min-h-screen bg-emerald-50 relative flex flex-col items-center justify-center p-4 overflow-hidden font-sans">
       {/* Mesh gradient effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 via-emerald-100 to-blue-200" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-300 rounded-full blur-[120px] opacity-40 animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-300 rounded-full blur-[120px] opacity-40 animate-pulse delay-1000" />
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 via-white to-teal-100" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-300 rounded-full blur-[120px] opacity-40 animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-200 rounded-full blur-[120px] opacity-40 animate-pulse delay-1000" />
 
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -194,7 +194,7 @@ export default function Login() {
             <button 
               type="submit"
               disabled={loading || !email}
-              className={`font-bold transition-all disabled:opacity-50 flex items-center gap-1 ${email ? 'text-[#6366F1] hover:opacity-70' : 'text-slate-400'}`}
+              className={`font-bold transition-all disabled:opacity-50 flex items-center gap-1 ${email ? 'text-emerald-600 hover:text-emerald-700 hover:opacity-100' : 'text-slate-400'}`}
             >
               {loading ? "..." : (
                 <>
