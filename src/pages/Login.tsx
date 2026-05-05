@@ -78,7 +78,7 @@ export default function Login() {
 
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
     if (provider === 'apple') {
-      alert('Apple Sign-In is currently in development and will be available soon. Please use Google or Magic Link for now!');
+      alert('Coming soon.');
       return;
     }
 
