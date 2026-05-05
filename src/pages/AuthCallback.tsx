@@ -5,7 +5,7 @@ import { useSupabase } from '../lib/mock-db'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
-  const { login } = useSupabase()
+  const { login, allProfiles } = useSupabase()
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -28,12 +28,27 @@ export default function AuthCallback() {
             email.split('@')[0] ||
             'User'
 
-          // Bridge the real Supabase session into the mock auth system
-          // so that ProtectedRoute recognizes the user as logged in
+          // Bridge the real Supabase session into the app's auth system
           login(email, fullName)
 
-          // Navigate directly to the dashboard instead of the landing page
-          navigate('/dashboard')
+          // Check if this is a returning user who already has a role
+          const existingProfile = allProfiles.find(p => p.email === email)
+
+          if (existingProfile && existingProfile.role && existingProfile.role !== '') {
+            // ── RETURNING USER ── Route to their role-specific dashboard
+            if (existingProfile.role === 'customer') {
+              navigate('/dashboard')
+            } else if (existingProfile.role === 'pharmacy') {
+              navigate(existingProfile.is_verified ? '/portal' : '/pending-verification')
+            } else if (existingProfile.role === 'logistics') {
+              navigate(existingProfile.is_verified ? '/logistics' : '/logistics-onboarding')
+            } else {
+              navigate('/dashboard')
+            }
+          } else {
+            // ── NEW USER ── Navigate to landing so the RoleModal appears
+            navigate('/')
+          }
         } else {
           console.error('No session found after OAuth callback')
           navigate('/login')
@@ -45,10 +60,10 @@ export default function AuthCallback() {
     }
 
     handleAuthCallback()
-  }, [navigate, login])
+  }, [navigate, login, allProfiles])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="min-h-screen flex items-center justify-center bg-emerald-50">
       <div className="text-center">
         <div className="h-12 w-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
         <h2 className="text-xl font-bold text-slate-900">Authenticating...</h2>

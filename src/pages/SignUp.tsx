@@ -66,7 +66,8 @@ export default function SignUp() {
       if (error) throw error;
       const fullName = data.user?.user_metadata?.full_name || email.split('@')[0] || 'User';
       login(email, fullName);
-      navigate('/dashboard');
+      // Navigate to landing — the RoleModal will automatically appear for role selection
+      navigate('/');
     } catch (err: any) {
       setError(err.message || 'Invalid code. Please try again.');
     } finally {
