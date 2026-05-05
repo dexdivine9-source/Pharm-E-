@@ -188,6 +188,15 @@ export default function Login() {
         animate={{ opacity: 1, y: 0 }}
         className="relative w-full max-w-sm space-y-6"
       >
+        {/* Brand Logo */}
+        <div className="flex flex-col items-center justify-center mb-8">
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 p-4 rounded-2xl shadow-xl mb-4 text-emerald-600 flex items-center justify-center">
+            <Activity className="h-10 w-10" />
+          </div>
+          <h1 className="text-3xl font-extrabold text-emerald-900 tracking-tight">Pharma-E</h1>
+          <p className="text-emerald-700/80 font-medium mt-1">Your Digital Pharmacy</p>
+        </div>
+
         {/* Email Pill Input */}
         <div className="bg-white/40 backdrop-blur-xl border border-white/40 rounded-full p-2 shadow-xl">
           <form onSubmit={handleMagicLink} className="flex items-center gap-3 px-4 h-14">
