@@ -12,7 +12,8 @@ import {
   User,
   MessageCircle,
   Phone,
-  ShieldCheck
+  ShieldCheck,
+  Package
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -34,6 +35,14 @@ export default function CustomerDashboard() {
       link: "/search",
       linkText: "Start Searching",
       bgColor: "bg-emerald-50",
+    },
+    {
+      title: "Browse Inventory",
+      description: "View all registered pharmacies and their live available drug stock across the network.",
+      icon: <Package className="w-8 h-8 text-blue-600" />,
+      link: "/browse-inventory",
+      linkText: "View Live Inventory",
+      bgColor: "bg-blue-50",
     },
     {
       title: "Verify & Collect",
