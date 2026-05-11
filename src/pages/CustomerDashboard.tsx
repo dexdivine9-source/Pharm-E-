@@ -64,7 +64,7 @@ export default function CustomerDashboard() {
       title: "Chat on WhatsApp",
       description: "Instantly chat with our AI assistant to find drugs, get prices, or initiate an order.",
       icon: <MessageCircle className="w-8 h-8 text-[#25D366]" />,
-      action: () => alert("Coming soon!"),
+      action: () => window.open("https://wa.me/2348000000000?text=Hi%2C%20I%20want%20to%20order%20drugs%20from%20Pharma-E%20Network", "_blank"),
       actionText: "Chat Now",
       bgColor: "bg-green-50",
     },
@@ -72,8 +72,8 @@ export default function CustomerDashboard() {
       title: "Talk with a Pharmacist",
       description: "Get professional medical advice and drug consultations from certified pharmacists.",
       icon: <Phone className="w-8 h-8 text-purple-600" />,
-      action: () => alert("Coming soon!"),
-      actionText: "Call Pharmacist",
+      link: "/pharmacist-consult",
+      linkText: "Consult Now",
       bgColor: "bg-purple-50",
     }
   ];

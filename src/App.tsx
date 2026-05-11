@@ -19,6 +19,7 @@ import CustomerDashboard from './pages/CustomerDashboard';
 import PharmacyPortal from './pages/PharmacyPortal';
 import PendingVerification from './pages/PendingVerification';
 import BrowseInventory from './pages/BrowseInventory';
+import PharmacistConsult from './pages/PharmacistConsult';
 import AISearch from './pages/AISearch';
 import RiderTracking from './pages/RiderTracking';
 import ProtectedRoute, { PublicOnlyRoute } from './components/ProtectedRoute';
@@ -49,6 +50,7 @@ function AnimatedRoutes() {
         {/* Customer Routes */}
         <Route path="/search" element={<ProtectedRoute requireRole="customer"><MedSearch /></ProtectedRoute>} />
         <Route path="/browse-inventory" element={<ProtectedRoute requireRole="customer"><BrowseInventory /></ProtectedRoute>} />
+        <Route path="/pharmacist-consult" element={<ProtectedRoute requireRole="customer"><PharmacistConsult /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute requireRole="customer"><CustomerDashboard /></ProtectedRoute>} />
         <Route path="/ai-search" element={<ProtectedRoute requireRole="customer"><AISearch /></ProtectedRoute>} />
         <Route path="/track/:id" element={<ProtectedRoute requireRole="customer"><RiderTracking /></ProtectedRoute>} />
